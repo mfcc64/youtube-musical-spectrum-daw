@@ -48,7 +48,6 @@ private:
             .withResourceProvider([this](const auto& url) { return get_resource(url); })
             .withKeepPageLoadedWhenBrowserIsHidden()
     };
-    bool is_ready;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(YTMSVisualizer)
 };
