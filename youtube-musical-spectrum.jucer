@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="MosmXw" name="YouTube Musical Spectrum" projectType="audioplug"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
+              pluginFormats="buildVST3" companyWebsite="https://github.com/mfcc64"
+              companyEmail="mfcc64@gmail.com" companyName="mfcc64" version="1.0.0"
+              pluginName="YouTube Musical Spectrum" pluginDesc="YouTube Musical Spectrum"
+              pluginManufacturer="mfcc64" pluginManufacturerCode="Manu" pluginCode="Mosm"
+              pluginVST3Category="Analyzer" pluginVSTCategory="kPlugCategAnalysis">
+  <MAINGROUP id="vYtvWc" name="YouTube Musical Spectrum">
+    <GROUP id="{5EB5156E-B1C4-FC43-C619-505C4A31DFBF}" name="Source">
+      <FILE id="VsesiY" name="main.cpp" compile="1" resource="0" file="Source/main.cpp"/>
+      <FILE id="d1TCEO" name="visualizer.cpp" compile="1" resource="0" file="Source/visualizer.cpp"/>
+      <FILE id="UFjfKf" name="visualizer.h" compile="0" resource="0" file="Source/visualizer.h"/>
+      <FILE id="Jwyhxf" name="processor.cpp" compile="1" resource="0" file="Source/processor.cpp"/>
+      <FILE id="s86azH" name="processor.h" compile="0" resource="0" file="Source/processor.h"/>
+    </GROUP>
+    <GROUP id="{91862C5E-5793-9D01-0B19-97898CA544F7}" name="WebView">
+      <GROUP id="{3F426922-2189-7429-DFE7-F8004374FB9E}" name="modules">
+        <GROUP id="{52992750-10FA-3550-CBBA-A83623B48C4F}" name="@mfcc64">
+          <GROUP id="{B290620F-14C1-1AF1-CCF3-FB1A301590E8}" name="ytms">
+            <FILE id="bf8gcj" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/package.json"/>
+            <FILE id="L5GaHX" name="script.mjs" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/script.mjs"/>
+          </GROUP>
+          <GROUP id="{4B07A92B-30D8-A42C-2530-90932BE62EB8}" name="ytms-assets@1.0.0">
+            <FILE id="PsZgvl" name="axis-hz-1920x32.png" compile="0" resource="1"
+                  file="WebView/modules/@mfcc64/ytms-assets@1.0.0/axis-hz-1920x32.png"/>
+            <FILE id="WbP9xc" name="icon-16.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-16.png"/>
+            <FILE id="uKvJUZ" name="icon-24.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-24.png"/>
+            <FILE id="uGjcYe" name="icon-32.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-32.png"/>
+            <FILE id="OfvtW5" name="icon-48.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-48.png"/>
+            <FILE id="qjT7UW" name="icon-64.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-64.png"/>
+            <FILE id="QpfKFm" name="icon-128.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-128.png"/>
+            <FILE id="jwvh12" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/package.json"/>
+          </GROUP>
+        </GROUP>
+        <GROUP id="{C2893A60-24F9-3D81-92E6-6779F4FFBA21}" name="showcqt-element@2">
+          <FILE id="V6nnOA" name="showcqt-element.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2/showcqt-element.mjs"/>
+        </GROUP>
+        <GROUP id="{0EE4F5A2-A346-0751-1190-5C8ABBD74CF2}" name="showcqt-element@2.1.0">
+          <FILE id="JJ27Xd" name="audio-worklet.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.1.0/audio-worklet.mjs"/>
+          <FILE id="uabBNa" name="axis-1920x32.png" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.1.0/axis-1920x32.png"/>
+          <FILE id="mI0kWY" name="extern-cdn.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.1.0/extern-cdn.mjs"/>
+          <FILE id="hUaKsA" name="extern.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.1.0/extern.mjs"/>
+          <FILE id="O54hHf" name="showcqt-element-main.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.1.0/showcqt-element-main.mjs"/>
+          <FILE id="oHLCE4" name="showcqt-element.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.1.0/showcqt-element.mjs"/>
+        </GROUP>
+        <GROUP id="{DB63A9C3-8942-2251-F6F4-2F10C9BE4486}" name="showcqt@2">
+          <FILE id="VGyvZW" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2/showcqt.mjs"/>
+        </GROUP>
+        <GROUP id="{E91B3EC8-87F3-A705-18FC-E723EFBBF1D3}" name="showcqt@2.2.2">
+          <FILE id="hTovuJ" name="showcqt-main.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt@2.2.2/showcqt-main.mjs"/>
+          <FILE id="qFe1vV" name="showcqt-simd.wasm" compile="0" resource="1"
+                file="WebView/modules/showcqt@2.2.2/showcqt-simd.wasm"/>
+          <FILE id="D95wSs" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.mjs"/>
+          <FILE id="yGSsRW" name="showcqt.wasm" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.wasm"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="PXzUDW" name="COPYING" compile="0" resource="1" file="WebView/COPYING"/>
+      <FILE id="lSvrTL" name="COPYING.LESSER" compile="0" resource="1" file="WebView/COPYING.LESSER"/>
+      <FILE id="VVcJTQ" name="index.html" compile="0" resource="1" file="WebView/index.html"/>
+      <FILE id="HEu3Q7" name="manifest.json" compile="0" resource="1" file="WebView/manifest.json"/>
+      <FILE id="eXw7yz" name="wrapper.js" compile="0" resource="1" file="WebView/wrapper.js"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
+               JUCE_USE_WIN_WEBVIEW2="1" JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING="1"/>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="youtube-musical-spectrum"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="youtube-musical-spectrum"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="youtube-musical-spectrum"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="youtube-musical-spectrum"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="youtube-musical-spectrum"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="youtube-musical-spectrum"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

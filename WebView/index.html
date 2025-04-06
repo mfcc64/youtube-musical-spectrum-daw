@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>YouTube Musical Spectrum - VST3 Plugin</title>
+        <script type="module">
+            import { ShowCQTElement, AutoResumeAudioContext } from "/modules/showcqt-element@2/showcqt-element.mjs";
+
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+            for (;;) {
+                const r = await fetch("/sample-rate", {cache: "no-store"});
+                if (!r.ok)
+                    throw "Error";
+
+                const data = new Int32Array(await r.arrayBuffer());
+                if (data[0] > 0) {
+                    ShowCQTElement.global_audio_context = new AutoResumeAudioContext({sampleRate: data[0]});
+                    await import("/modules/@mfcc64/ytms/script.mjs");
+                    break;
+                }
+
+                await sleep(100);
+            }
+
+            const cqt = document.getElementsByTagName("showcqt-element")[0];
+            const sample_rate = cqt.audio_context.sampleRate;
+
+            cqt.audio_context.close();
+            cqt.render_callback = null;
+            cqt.send_buffer = () => 0;
+
+            const toggle_pause_button = document.getElementById("toggle-pause-button");
+            toggle_pause_button.addEventListener("click", () => {
+                if (cqt.render_is_paused) {
+                    cqt.render_play();
+                    toggle_pause_button.textContent = "Pause";
+                } else {
+                    cqt.render_pause();
+                    toggle_pause_button.textContent = "Play";
+                }
+            });
+
+            for (;;) {
+                const r = await fetch("/pcm-data", {cache: "no-store"});
+                if (!r.ok)
+                    throw "Error";
+
+                const buffer = await r.arrayBuffer();
+                const length = (buffer.byteLength / 8) | 0;
+
+                if (length <= 0) {
+                    await sleep(5);
+                    continue;
+                }
+
+                cqt.write_buffer([
+                    new Float32Array(buffer, 0, length),
+                    new Float32Array(buffer, length*4, length)
+                ]);
+                await sleep(10);
+            }
+        </script>
+        <style>
+            :root {
+                background-color: #212121;
+                color: White;
+            }
+
+            body {
+                margin: 32px;
+            }
+
+            #buttons-container {
+                position: fixed;
+                top: 0;
+                right: 0;
+                padding: 3px;
+                z-index: 3;
+            }
+
+            #toggle-pause-button {
+                width: 80px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="buttons-container">
+            <button id="toggle-pause-button">Pause</button>
+        </div>
+    </body>
+</html>
