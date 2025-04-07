@@ -3,7 +3,7 @@
 <JUCERPROJECT id="MosmXw" name="YouTube Musical Spectrum" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
               pluginFormats="buildVST3" companyWebsite="https://github.com/mfcc64"
-              companyEmail="mfcc64@gmail.com" companyName="mfcc64" version="1.0.0"
+              companyEmail="mfcc64@gmail.com" companyName="mfcc64" version="1.0.1"
               pluginName="YouTube Musical Spectrum" pluginDesc="YouTube Musical Spectrum"
               pluginManufacturer="mfcc64" pluginManufacturerCode="Manu" pluginCode="Mosm"
               pluginVST3Category="Analyzer" pluginVSTCategory="kPlugCategAnalysis">
