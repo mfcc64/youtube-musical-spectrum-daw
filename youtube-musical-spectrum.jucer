@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="MosmXw" name="YouTube Musical Spectrum" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1"
-              pluginFormats="buildVST3" companyWebsite="https://github.com/mfcc64"
+              pluginFormats="buildStandalone,buildVST3" companyWebsite="https://github.com/mfcc64"
               companyEmail="mfcc64@gmail.com" companyName="mfcc64" version="1.0.1"
               pluginName="YouTube Musical Spectrum" pluginDesc="YouTube Musical Spectrum"
               pluginManufacturer="mfcc64" pluginManufacturerCode="Manu" pluginCode="Mosm"
@@ -71,9 +71,12 @@
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
             useGlobalPath="1"/>
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -99,6 +102,9 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
     <VS2022 targetFolder="Builds/VisualStudio2022">
@@ -116,6 +122,9 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
     <XCODE_MAC targetFolder="Builds/MacOSX">
@@ -133,6 +142,9 @@
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
