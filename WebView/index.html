@@ -7,6 +7,32 @@
 
             const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+            async function check_update() {
+                const current_tag = "v1.0.1";
+
+                const headers = {
+                    "Accept": "application/vnd.github+json",
+                    "X-GitHub-Api-Version": "2022-11-28"
+                };
+
+                const r = await fetch("https://api.github.com/repos/mfcc64/youtube-musical-spectrum-daw/releases/latest", { headers });
+                if (!r.ok)
+                    throw Error("Cannot fetch update");
+
+                const data = await r.json();
+
+                if (data.tag_name != current_tag) {
+                    const a = document.createElement("a");
+                    a.textContent = "updates available";
+                    a.href = "https://github.com/mfcc64/youtube-musical-spectrum-daw/releases";
+                    a.target = "_blank";
+                    a.title = `update from ${current_tag} to ${data.tag_name}`;
+                    document.getElementById("update-link").appendChild(a);
+                }
+            }
+
+            check_update();
+
             for (;;) {
                 const r = await fetch("/sample-rate", {cache: "no-store"});
                 if (!r.ok)
@@ -86,6 +112,7 @@
     </head>
     <body>
         <div id="buttons-container">
+            <span id="update-link"></span>
             <button id="toggle-pause-button">Pause</button>
         </div>
     </body>
