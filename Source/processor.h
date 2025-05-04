@@ -53,7 +53,7 @@ public:
     static const int BUFFER_SIZE = 65536;
     static const int BUFFER_MASK = BUFFER_SIZE - 1;
     struct {
-        juce::Rectangle<int> bounds { 64, 64, 960, 480 };
+        juce::Rectangle<int> bounds { 0, 0, 0, 0 };
         std::int32_t sample_rate;
         int read_index;
         float buffer[BUFFER_SIZE * 2];

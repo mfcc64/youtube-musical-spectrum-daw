@@ -16,13 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <cstdio>
 #include "visualizer.h"
 #include "BinaryData.h"
+
+static juce::String size_location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::tempDirectory).getFullPathName() + "/youtube-musical-spectrum-daw-size.txt";
 
 YTMSVisualizer::YTMSVisualizer(YTMSProcessor& p) : juce::AudioProcessorEditor(&p), processor(p) {
     addAndMakeVisible(webview);
     webview.goToURL(juce::WebBrowserComponent::getResourceProviderRoot());
     setResizable(true, false);
+
+    if (processor.public_data.bounds.isEmpty()) {
+        std::FILE* fp = std::fopen(size_location.toRawUTF8(), "r");
+        if (fp) {
+            int w, h;
+            if(std::fscanf(fp, "%d %d", &w, &h) == 2)
+                processor.public_data.bounds.setSize(w, h);
+            std::fclose(fp);
+        }
+    }
+
+    if (processor.public_data.bounds.isEmpty())
+        processor.public_data.bounds.setSize(960, 480);
+
     setBounds(processor.public_data.bounds);
     setResizeLimits(640, 320, 1920, 1080);
 }
@@ -32,6 +49,11 @@ YTMSVisualizer::~YTMSVisualizer() { }
 void YTMSVisualizer::resized() {
     webview.setBounds(getLocalBounds());
     processor.public_data.bounds = getBounds();
+    std::FILE* fp = std::fopen(size_location.toRawUTF8(), "w");
+    if (fp) {
+        std::fprintf(fp, "%d %d", processor.public_data.bounds.getWidth(), processor.public_data.bounds.getHeight());
+        std::fclose(fp);
+    }
 }
 
 void YTMSVisualizer::moved() {
