@@ -28,6 +28,7 @@
                     a.target = "_blank";
                     a.title = `update from ${current_tag} to ${data.tag_name}`;
                     document.getElementById("update-link").appendChild(a);
+                    document.getElementById("update-link").style.display = "block";
                 }
             }
 
@@ -65,6 +66,34 @@
                     toggle_pause_button.textContent = "Play";
                 }
             });
+
+            (function custom_script() {
+                const name = "youtube_musical_spectrum_daw_custom_script";
+                document.getElementById("load-script").onclick = function() {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "text/javascript";
+                    input.onchange = async () => {
+                        if (!input.files[0])
+                            return;
+                        const str = await input.files[0].text();
+                        localStorage.setItem(name, str);
+                        document.location.reload();
+                    };
+                    input.click();
+                };
+                document.getElementById("clear-script").onclick = function() {
+                    localStorage.removeItem(name);
+                    document.location.reload();
+                };
+                const str = localStorage.getItem(name);
+                if (!str) return;
+
+                const blob = new Blob([str], { type: "text/javascript" });
+                const script = document.createElement("script");
+                script.src = URL.createObjectURL(blob);
+                document.head.appendChild(script);
+            })();
 
             for (;;) {
                 const r = await fetch("/pcm-data", {cache: "no-store"});
@@ -108,12 +137,30 @@
                 width: 80px;
                 cursor: pointer;
             }
+
+            #load-script, #clear-script {
+                cursor: pointer;
+            }
+
+            #update-link {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                padding: 3px;
+                margin: 3px;
+                z-index: 100000000;
+                background-color: #000000cc;
+                border: thin solid White;
+                display: none;
+            }
         </style>
     </head>
     <body>
         <div id="buttons-container">
-            <span id="update-link"></span>
+            <button id="clear-script">Clear Script</button>
+            <button id="load-script">Load Script</button>
             <button id="toggle-pause-button">Pause</button>
         </div>
+        <div id="update-link"></div>
     </body>
 </html>
