@@ -19,54 +19,54 @@
       <GROUP id="{3F426922-2189-7429-DFE7-F8004374FB9E}" name="modules">
         <GROUP id="{52992750-10FA-3550-CBBA-A83623B48C4F}" name="@mfcc64">
           <GROUP id="{B290620F-14C1-1AF1-CCF3-FB1A301590E8}" name="ytms">
-            <FILE id="UBicSz" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/package.json"/>
-            <FILE id="u8B4oN" name="script.mjs" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/script.mjs"/>
+            <FILE id="JWB96z" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/package.json"/>
+            <FILE id="sxzkwS" name="script.mjs" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms/script.mjs"/>
           </GROUP>
           <GROUP id="{4B07A92B-30D8-A42C-2530-90932BE62EB8}" name="ytms-assets@1.0.0">
-            <FILE id="Ffm8qI" name="axis-hz-1920x32.png" compile="0" resource="1"
+            <FILE id="PpahcD" name="axis-hz-1920x32.png" compile="0" resource="1"
                   file="WebView/modules/@mfcc64/ytms-assets@1.0.0/axis-hz-1920x32.png"/>
-            <FILE id="Exnybc" name="icon-16.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-16.png"/>
-            <FILE id="qqzCoz" name="icon-24.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-24.png"/>
-            <FILE id="xIy41s" name="icon-32.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-32.png"/>
-            <FILE id="Bko8nh" name="icon-48.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-48.png"/>
-            <FILE id="uBNcXC" name="icon-64.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-64.png"/>
-            <FILE id="xHPrmS" name="icon-128.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-128.png"/>
-            <FILE id="xkXkKF" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/package.json"/>
+            <FILE id="A58rqq" name="icon-16.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-16.png"/>
+            <FILE id="ZepdQI" name="icon-24.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-24.png"/>
+            <FILE id="iT2XdG" name="icon-32.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-32.png"/>
+            <FILE id="VCpeRp" name="icon-48.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-48.png"/>
+            <FILE id="HijdLH" name="icon-64.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-64.png"/>
+            <FILE id="GSWTt4" name="icon-128.png" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/icon-128.png"/>
+            <FILE id="T7zSe6" name="package.json" compile="0" resource="1" file="WebView/modules/@mfcc64/ytms-assets@1.0.0/package.json"/>
           </GROUP>
         </GROUP>
         <GROUP id="{C2893A60-24F9-3D81-92E6-6779F4FFBA21}" name="showcqt-element@2">
-          <FILE id="oGj6s2" name="showcqt-element.mjs" compile="0" resource="1"
+          <FILE id="CMRzUw" name="showcqt-element.mjs" compile="0" resource="1"
                 file="WebView/modules/showcqt-element@2/showcqt-element.mjs"/>
         </GROUP>
-        <GROUP id="{298E9FFF-AD00-1A83-EC1A-424E0BAED71D}" name="showcqt-element@2.2.0">
-          <FILE id="pEm4CY" name="audio-worklet.mjs" compile="0" resource="1"
-                file="WebView/modules/showcqt-element@2.2.0/audio-worklet.mjs"/>
-          <FILE id="hazSYk" name="axis-1920x32.png" compile="0" resource="1"
-                file="WebView/modules/showcqt-element@2.2.0/axis-1920x32.png"/>
-          <FILE id="mxrRqa" name="extern-cdn.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.2.0/extern-cdn.mjs"/>
-          <FILE id="gCqs2y" name="extern.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.2.0/extern.mjs"/>
-          <FILE id="OfmLP7" name="showcqt-element-main.mjs" compile="0" resource="1"
-                file="WebView/modules/showcqt-element@2.2.0/showcqt-element-main.mjs"/>
-          <FILE id="pwykJa" name="showcqt-element.mjs" compile="0" resource="1"
-                file="WebView/modules/showcqt-element@2.2.0/showcqt-element.mjs"/>
+        <GROUP id="{56959BA9-43BA-DBDB-C07D-EE9612AA2D9E}" name="showcqt-element@2.2.1">
+          <FILE id="iKOPpY" name="audio-worklet.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.2.1/audio-worklet.mjs"/>
+          <FILE id="JTP9Ho" name="axis-1920x32.png" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.2.1/axis-1920x32.png"/>
+          <FILE id="HMbL8A" name="extern-cdn.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.2.1/extern-cdn.mjs"/>
+          <FILE id="KdigoN" name="extern.mjs" compile="0" resource="1" file="WebView/modules/showcqt-element@2.2.1/extern.mjs"/>
+          <FILE id="CdmM8j" name="showcqt-element-main.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.2.1/showcqt-element-main.mjs"/>
+          <FILE id="r69Wsu" name="showcqt-element.mjs" compile="0" resource="1"
+                file="WebView/modules/showcqt-element@2.2.1/showcqt-element.mjs"/>
         </GROUP>
         <GROUP id="{DB63A9C3-8942-2251-F6F4-2F10C9BE4486}" name="showcqt@2">
-          <FILE id="BalMNR" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2/showcqt.mjs"/>
+          <FILE id="U5PYwi" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2/showcqt.mjs"/>
         </GROUP>
         <GROUP id="{E91B3EC8-87F3-A705-18FC-E723EFBBF1D3}" name="showcqt@2.2.2">
-          <FILE id="FCw8xX" name="showcqt-main.mjs" compile="0" resource="1"
+          <FILE id="GcIEti" name="showcqt-main.mjs" compile="0" resource="1"
                 file="WebView/modules/showcqt@2.2.2/showcqt-main.mjs"/>
-          <FILE id="QnfRX0" name="showcqt-simd.wasm" compile="0" resource="1"
+          <FILE id="E7K9Yl" name="showcqt-simd.wasm" compile="0" resource="1"
                 file="WebView/modules/showcqt@2.2.2/showcqt-simd.wasm"/>
-          <FILE id="phJG34" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.mjs"/>
-          <FILE id="Tm8Gfd" name="showcqt.wasm" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.wasm"/>
+          <FILE id="DWwEUj" name="showcqt.mjs" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.mjs"/>
+          <FILE id="HWZGSi" name="showcqt.wasm" compile="0" resource="1" file="WebView/modules/showcqt@2.2.2/showcqt.wasm"/>
         </GROUP>
       </GROUP>
-      <FILE id="kIJIYA" name="COPYING" compile="0" resource="1" file="WebView/COPYING"/>
-      <FILE id="YR1q3Y" name="COPYING.LESSER" compile="0" resource="1" file="WebView/COPYING.LESSER"/>
-      <FILE id="ojadnL" name="index.html" compile="0" resource="1" file="WebView/index.html"/>
-      <FILE id="iBKsfq" name="manifest.json" compile="0" resource="1" file="WebView/manifest.json"/>
-      <FILE id="vuW1fF" name="wrapper.js" compile="0" resource="1" file="WebView/wrapper.js"/>
+      <FILE id="vKv7OD" name="COPYING" compile="0" resource="1" file="WebView/COPYING"/>
+      <FILE id="hfUaRy" name="COPYING.LESSER" compile="0" resource="1" file="WebView/COPYING.LESSER"/>
+      <FILE id="y8BEsr" name="index.html" compile="0" resource="1" file="WebView/index.html"/>
+      <FILE id="HYzvPw" name="manifest.json" compile="0" resource="1" file="WebView/manifest.json"/>
+      <FILE id="mxkmzd" name="wrapper.js" compile="0" resource="1" file="WebView/wrapper.js"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
