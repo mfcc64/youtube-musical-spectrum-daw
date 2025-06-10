@@ -55,6 +55,7 @@
             cqt.audio_context.close();
             cqt.render_callback = null;
             cqt.send_buffer = () => 0;
+            cqt.style.zIndex = 7;
 
             const toggle_pause_button = document.getElementById("toggle-pause-button");
             toggle_pause_button.addEventListener("click", () => {
@@ -133,6 +134,19 @@
                 z-index: 3;
             }
 
+            #buttons-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 64px;
+                z-index: 8;
+            }
+
+            #buttons-wrapper:hover + #buttons-container, #buttons-container:hover {
+                z-index: 9;
+            }
+
             #toggle-pause-button {
                 width: 80px;
                 cursor: pointer;
@@ -156,6 +170,7 @@
         </style>
     </head>
     <body>
+        <div id="buttons-wrapper"></div>
         <div id="buttons-container">
             <button id="clear-script">Clear Script</button>
             <button id="load-script">Load Script</button>
