@@ -41,7 +41,7 @@ YTMSVisualizer::YTMSVisualizer(YTMSProcessor& p) : juce::AudioProcessorEditor(&p
         processor.public_data.bounds.setSize(960, 480);
 
     setBounds(processor.public_data.bounds);
-    setResizeLimits(640, 320, 1920, 1080);
+    setResizeLimits(320, 320, 1920, 1080);
 }
 
 YTMSVisualizer::~YTMSVisualizer() { }
