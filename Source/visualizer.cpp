@@ -20,7 +20,7 @@
 #include "visualizer.h"
 #include "BinaryData.h"
 
-static juce::String size_location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::tempDirectory).getFullPathName() + "/youtube-musical-spectrum-daw-size.txt";
+static juce::String size_location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::userApplicationDataDirectory).getFullPathName() + "/youtube-musical-spectrum-daw-size.txt";
 
 YTMSVisualizer::YTMSVisualizer(YTMSProcessor& p) : juce::AudioProcessorEditor(&p), processor(p) {
     addAndMakeVisible(webview);

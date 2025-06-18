@@ -44,7 +44,7 @@ private:
         juce::WebBrowserComponent::Options {}
             .withBackend(juce::WebBrowserComponent::Options::Backend::webview2)
             .withWinWebView2Options(juce::WebBrowserComponent::Options::WinWebView2{}
-                .withUserDataFolder(juce::File::getSpecialLocation (juce::File::SpecialLocationType::tempDirectory)))
+                .withUserDataFolder(juce::File::getSpecialLocation (juce::File::SpecialLocationType::userApplicationDataDirectory)))
             .withResourceProvider([this](const auto& url) { return get_resource(url); })
             .withNativeIntegrationEnabled()
             .withKeepPageLoadedWhenBrowserIsHidden()
