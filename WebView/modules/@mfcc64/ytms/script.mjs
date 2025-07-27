@@ -42,11 +42,16 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         left_color: { def:0xdcb900, min:0, max:0xffffff },
         right_color:{ def:0x00b9dc, min:0, max:0xffffff },
         mid_color:  { def:0xdcdcdc, min:0, max:0xffffff },
+        saturation: { def:  0, min:  0, max: 30 },
+        hue:        { def:  0, min:-18, max: 19 },
+        hue_range:  { def: 18, min:-36, max: 36 },
         interval:   { def:  1, min:  1, max:  4 },
         bar_scale:  { def:  0, min:  0, max:  4 },
         line_mode:  { def:  0, min:  0, max:  4 },
         line_width: { def:  1, min:  1, max:  3 },
         line_color: { def:0xffffff, min:0, max:0xffffff },
+        scroll:     { def:  0, min:  0, max:  1 },
+        coord_color:{ def:0x000000, min:0, max:0xffffff },
         transparent:{ def:  1, min:  0, max:  1 },
         visible:    { def: document.location.hostname != "www.youtube.com" ? 1 : 0,
                                min:  0, max:  1 },
@@ -121,7 +126,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
                 e("li", "If you want to change the axis, click it."),
                 e("li", "If you want to make your change persistent, click ", e("b", "Set as Default Settings"), " button."),
                 e("li", e("b", "New Features:"), " Custom color, custom range," +
-                    " peak color, bar scale, presets, line visualizer."),
+                    " peak color, bar scale, line visualizer, hue rotation, more color presets, horizontal scroll, coordinate line."),
                 e("li", e("a", {href: "https://github.com/mfcc64/youtube-musical-spectrum#settings"}, {target: "_blank"}, "Read more..."))
               ),
               e("p",
@@ -152,7 +157,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         af_links.style.display = !af_links_timeout || (child_menu.visible?.checked ?? true) ? "block" : "none";
     }
 
-    const message_version = 11;
+    const message_version = 12;
     af_links.shadowRoot.getElementById("message").style.display = get_opt("message_version") == message_version ? "none" : "block";
     af_links.shadowRoot.getElementById("close_message").addEventListener("click", function() {
         set_opt("message_version", message_version);
@@ -164,8 +169,6 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
 
     const cqt = new ShowCQTElement();
     set_fixed_style(cqt, 9999999);
-    cqt.style.left = cqt.style.bottom = 0;
-    cqt.style.width = "100%";
     let stop_count = 0;
     const videos = document.getElementsByTagName("video");
     let svideos = [];
@@ -199,10 +202,10 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
 
         function update_cqt_bottom() {
             if (document.fullscreenElement) {
-                cqt.style.bottom = 0;
+                document.body.style.setProperty("--ytms-cqt-bottom", "0px");
                 af_links.style.visibility = "hidden";
             } else {
-                cqt.style.bottom = "var(--ytmusic-player-bar-height, 0)";
+                document.body.style.setProperty("--ytms-cqt-bottom", "var(--ytmusic-player-bar-height, 0px)");
                 af_links.style.visibility = "visible";
             }
         }
@@ -213,6 +216,51 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
 
     if (document.location.hostname == "music.youtube.com")
         ytmusic_layout();
+
+    const coord_line_h = document.createElement("div");
+    const coord_line_v = document.createElement("div");
+    set_fixed_style(coord_line_h, cqt.style.zIndex);
+    set_fixed_style(coord_line_v, cqt.style.zIndex);
+    coord_line_h.style.left = 0;
+    coord_line_h.style.width = "100%";
+    coord_line_h.style.height = "1px";
+    coord_line_v.style.top = 0;
+    coord_line_v.style.height = "100%";
+    coord_line_v.style.width = "1px";
+    coord_line_h.style.pointerEvents = coord_line_v.style.pointerEvents = "none";
+    coord_line_h.style.display = coord_line_v.style.display = "none";
+
+    function update_cqt_layout(child) {
+        if (!child_menu.height || !child_menu.scroll || !child_menu.base_note || !child_menu.semitones)
+            return;
+
+        const width = child_menu.semitones.value * 1;
+        const base = child_menu.base_note.value - 16;
+        if (base + width > 120) {
+            child == child_menu.semitones ?
+                (child_menu.base_note.value = 120 - width + 16, child_menu.base_note.onchange()) :
+                (child_menu.semitones.value = 120 - base, child_menu.semitones.onchange());
+            return;
+        }
+
+        const vleft = -base / width;
+        const vwidth = 120 / width;
+
+        if (child_menu.scroll.value == "0") {
+            cqt.style.height = `calc(${ child_menu.height.value / 100} * (100% - var(--ytms-cqt-bottom, 0px)))`;
+            cqt.style.width = vwidth * 100 + "%";
+            cqt.style.left = vleft * 100 + "%";
+            cqt.style.bottom = "var(--ytms-cqt-bottom, 0px)";
+            cqt.style.transform = "";
+        } else {
+            cqt.style.height = child_menu.height.value + "vw";
+            cqt.style.width = `calc(${vwidth} * (100vh - var(--ytms-cqt-bottom, 0px)))`;
+            cqt.style.left = "100vw";
+            cqt.style.bottom = `calc(var(--ytms-cqt-bottom, 0px) + ${vleft} * (100vh - var(--ytms-cqt-bottom, 0px)))`;
+            cqt.style.transform = "rotate(-90deg)";
+            cqt.style.transformOrigin = "bottom left";
+        }
+    }
 
     child_menu.axis = { value: get_opt("axis") };
     child_menu.axis.onchange = function() { cqt.dataset.axis = axis_list[child_menu.axis.value]; };
@@ -249,10 +297,13 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         menu_div.style.backgroundColor = "#000000DD";
         menu_div.style.verticalAlign = "middle";
         menu_div.style.maxHeight = "90%";
+        menu_div.style.maxWidth = "90%";
         menu_div.style.overflow = "auto";
-        menu_div.style.scrollbarWidth = "none";
+        menu_div.style.scrollbarWidth = "8px";
+        menu_div.style.scrollbarColor = "#555555 #222222dd";
         menu_div.style.visibility = "hidden";
         menu_div.style.cursor = "default";
+        menu_table.style.width = "860px";
 
         var current_tr = null;
         var current_tr_count = 0;
@@ -316,7 +367,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         mic.pan.connect(cqt.audio_input);
         mic.gain.connect(mic.pan);
 
-        create_child_range_menu("Height", "height", (child) => cqt.style.height = child.value + "%");
+        create_child_range_menu("Height", "height", update_cqt_layout);
         create_child_range_menu("Bar", "bar", (child) => cqt.dataset.bar = child.value);
         create_child_range_menu("Waterfall", "waterfall", (child) => cqt.dataset.waterfall = child.value);
         create_child_range_menu("Brightness", "brightness", (child) => cqt.dataset.brightness = child.value);
@@ -355,8 +406,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         create_child_range_menu("Scale X", "scale_x", (child) => cqt.dataset.scaleX = child.value);
         create_child_range_menu("Scale Y", "scale_y", (child) => cqt.dataset.scaleY = child.value);
 
-        let bar_scale_func = null;
-        function create_child_select_bar_scale(title, name) {
+        function create_child_select_menu(title, name, select_opt, callback) {
             var tr = get_menu_table_tr();
             set_common_tr_style(tr);
             var td = document.createElement("td");
@@ -365,66 +415,126 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             tr.appendChild(td);
             td = document.createElement("td");
             td.colSpan = 3;
-            var child = child_menu[name] = document.createElement("select");
+            var child = document.createElement("select");
+            if (name) child_menu[name] = child;
             child.style.cursor = "pointer";
             child.style.width = "100%";
-            var select_opt = [ "Linear", "Sqrt", "Log (40 dB)", "Log (60 dB)", "Log (80 dB)" ];
-            for (var k = 0; k < select_opt.length; k++) {
-                var opt = document.createElement("option");
+            for (let k = 0; k < select_opt.length; k++) {
+                const opt = document.createElement("option");
                 opt.textContent = select_opt[k];
                 opt.value = k;
                 child.appendChild(opt);
             }
-            child.value = get_opt("bar_scale");
+            if (name) child.value = get_opt(name);
             td.appendChild(child);
             tr.appendChild(td);
-            child.onchange = function() {
-                switch (child.value) {
-                    case "1": bar_scale_func = bar_scale_sqrt; break;
-                    case "2": bar_scale_func = c => bar_scale_db(c, 2); break;
-                    case "3": bar_scale_func = c => bar_scale_db(c, 3); break;
-                    case "4": bar_scale_func = c => bar_scale_db(c, 4); break;
-                    default: bar_scale_func = null;
-                }
-            };
+            child.onchange = () => callback?.(child);
             child.onchange();
-
-            function bar_scale_sqrt(color) {
-                for (let k = 3; k < color.length; k += 4)
-                    color[k] = 0.5 * Math.sqrt(color[k]);
-            }
-
-            function bar_scale_db(color, range) {
-                for (let k = 3; k < color.length; k += 4)
-                    color[k] = Math.max(0, (Math.log10(color[k]) + range) / range);
-            }
-        }
-        create_child_select_bar_scale("Bar Scale", "bar_scale");
-
-        function update_range(child) {
-            if (!child_menu.base_note || !child_menu.semitones)
-                return;
-
-            const width = child_menu.semitones.value * 1;
-            const base = child_menu.base_note.value - 16;
-            if (base + width > 120) {
-                child == child_menu.semitones ?
-                    (child_menu.base_note.value = 120 - width + 16, child_menu.base_note.onchange()) :
-                    (child_menu.semitones.value = 120 - base, child_menu.semitones.onchange());
-                return;
-            }
-            cqt.style.left = -base / width * 100 + "%";
-            cqt.style.width = 12000 / width + "%";
         }
 
-        create_child_range_menu("Base Note", "base_note", child => update_range(child));
-        create_child_range_menu("Semitones", "semitones", child => update_range(child));
+        let bar_scale_func = null;
+
+        function bar_scale_sqrt(color) {
+            for (let k = 3; k < color.length; k += 4)
+                color[k] = 0.5 * Math.sqrt(color[k]);
+        }
+
+        function bar_scale_db(color, range) {
+            for (let k = 3; k < color.length; k += 4)
+                color[k] = Math.max(0, (Math.log10(color[k]) + range) / range);
+        }
+
+        create_child_select_menu("Bar Scale", "bar_scale",
+            [ "Linear", "Sqrt", "Log (40 dB)", "Log (60 dB)", "Log (80 dB)" ], (child) => {
+            switch (child.value) {
+                case "1": bar_scale_func = bar_scale_sqrt; break;
+                case "2": bar_scale_func = c => bar_scale_db(c, 2); break;
+                case "3": bar_scale_func = c => bar_scale_db(c, 3); break;
+                case "4": bar_scale_func = c => bar_scale_db(c, 4); break;
+                default: bar_scale_func = null;
+            }
+        });
+
+        create_child_range_menu("Base Note", "base_note", update_cqt_layout);
+        create_child_range_menu("Semitones", "semitones", update_cqt_layout);
 
         const number2color = n => "#" + (n|0).toString(16).padStart(6, "0");
         const color2number = c => Number.parseInt(c.slice(1), 16);
         const color_int = [ 0, 0, 0, 0 ];
         const color_table = new Array(9);
         const peak_color = new Array(3);
+
+        class ColorRotation {
+            constructor() {
+                const kr = 0.2126;
+                const kb = 0.0722;
+                const kg = 1 - (kr + kb);
+                const kmul = 2 / Math.sqrt(3);
+
+                this.mat_r = [ 1, 2 * (kb + kg), kmul * (kb - kg) ];
+                this.mat_g = [ 1,       -2 * kr, kmul * (kb - kg + 1) ];
+                this.mat_b = [ 1,       -2 * kr, kmul * (kb - kg - 1) ];
+
+                this.saturation = 0;
+                this.hue = 0;
+                this.hue_range = 0;
+                this.table_len = 1000;
+                this.table = new Float32Array(this.table_len * 3 + 6);
+            }
+
+            rgb_from_yuv(res, y, u, v) {
+                res[0] = y + this.mat_r[1] * u + this.mat_r[2] * v;
+                res[1] = y + this.mat_g[1] * u + this.mat_g[2] * v;
+                res[2] = y + this.mat_b[1] * u + this.mat_b[2] * v;
+            }
+
+            update(saturation, hue, hue_range) {
+                this.saturation = saturation;
+                this.hue = hue;
+                this.hue_range = hue_range;
+
+                if (this.saturation == 0)
+                    return;
+
+                const res = [ 0, 0, 0 ];
+                const hue_step = Math.PI / 18 * hue_range;
+                const hue_start = Math.PI / 18 * hue - 0.5 * hue_step;
+                const sat_g = 10 ** (saturation / 10 - 1);
+
+                for (let k = 0; k <= this.table_len + 1; k++) {
+                    let y = Math.min(1, k / this.table_len);
+                    let h = hue_start + Math.sin(0.5 * Math.PI * y) * hue_step;
+                    h = h - 0.23 * Math.sin(3 * h);
+                    y = y*y;
+                    let u = Math.cos(h), v = Math.sin(h), s = 0, sum_rcp = 0;
+                    this.rgb_from_yuv(res, y, u, v);
+                    for (let c = 0; c < 3; c++) {
+                        sum_rcp += Math.exp((res[c] - y) * y * sat_g);
+                        sum_rcp += Math.exp((y - res[c]) * (1 - y) * sat_g);
+                    }
+                    s = y * (1 - y) * sat_g / Math.log(sum_rcp);
+                    this.rgb_from_yuv(res, y, s*u, s*v);
+                    const gamma = 1/2.2;
+                    this.table[3*k+0] = Math.max(0, res[0])**gamma;
+                    this.table[3*k+1] = Math.max(0, res[1])**gamma;
+                    this.table[3*k+2] = Math.max(0, res[2])**gamma;
+                }
+            }
+
+            transform(color) {
+                const len = color.length / 4;
+                for (let k = 0; k < len; k++) {
+                    const y = Math.max(0, Math.min(1, color[4*k+1])) * this.table_len;
+                    const idx = Math.floor(y);
+                    const frac = y - idx;
+                    const ifrac = 1 - frac;
+                    color[4*k+0] = this.table[3*idx+0] * ifrac + this.table[3*idx+3] * frac;
+                    color[4*k+1] = this.table[3*idx+1] * ifrac + this.table[3*idx+4] * frac;
+                    color[4*k+2] = this.table[3*idx+2] * ifrac + this.table[3*idx+5] * frac;
+                }
+            }
+        }
+        const color_rotation = new ColorRotation();
 
         function create_child_color_menu(title, name, callback) {
             var tr = get_menu_table_tr();
@@ -466,7 +576,10 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
                 if (color[k+3] <= color[k-1] || color[k+3] < color[k+7])
                     continue;
 
-                const alpha = (1 - (k+2) / color.length) ** 2;
+                const alpha = (1 - (k+2) / color.length) ** 2 - 0.16;
+                if (alpha <= 0)
+                    break;
+
                 for (let m = 0; m < 3; m++)
                     color[k+m] = Math.min(color[k+m], 1) * (1 - alpha + peak_color[m] * alpha);
             }
@@ -496,7 +609,25 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         create_child_color_menu("Mid Color", "mid_color", child => color_int[1] = color2number(child.value));
         create_child_color_menu("Right Color", "right_color", child => color_int[2] = color2number(child.value));
 
+        function update_color_rotation() {
+            color_rotation.update(Number(child_menu.saturation?.value ?? 0),
+                                  Number(child_menu.hue?.value ?? 0),
+                                  Number(child_menu.hue_range?.value ?? 0));
+        }
+        create_child_range_menu("Saturation", "saturation", update_color_rotation);
+        create_child_range_menu("Hue", "hue", child => {
+            if (child.value == 19)
+                return child.value = -17, child.onchange();
+            if (child.value == -18)
+                return child.value = 18, child.onchange();
+            update_color_rotation();
+        });
+        create_child_range_menu("Hue Range", "hue_range", update_color_rotation);
+
         function transform_color(color) {
+            if (color_rotation.saturation > 0)
+                return color_rotation.transform(color);
+
             if (color_int[0] == 0xdcb900 && color_int[1] == 0xdcdcdc && color_int[2] == 0x00b9dc)
                 return;
 
@@ -508,31 +639,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             }
         }
 
-        function create_child_select_line_mode(title, name) {
-            var tr = get_menu_table_tr();
-            set_common_tr_style(tr);
-            var td = document.createElement("td");
-            set_common_left_td_style(td);
-            td.textContent = title;
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.colSpan = 3;
-            var child = child_menu[name] = document.createElement("select");
-            child.style.cursor = "pointer";
-            child.style.width = "100%";
-            var select_opt = [ "Off", "Static", "Mid Color", "Average", "Spectrum" ];
-            for (var k = 0; k < select_opt.length; k++) {
-                var opt = document.createElement("option");
-                opt.textContent = select_opt[k];
-                opt.value = k;
-                child.appendChild(opt);
-            }
-            child.value = get_opt("line_mode");
-            td.appendChild(child);
-            tr.appendChild(td);
-            child.onchange = () => {};
-        }
-        create_child_select_line_mode("Line Mode", "line_mode");
+        create_child_select_menu("Line Mode", "line_mode", [ "Off", "Static", "Mid Color", "Average", "Spectrum" ]);
         create_child_range_menu("Line Width", "line_width");
         create_child_color_menu("Line Color", "line_color");
 
@@ -639,50 +746,55 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             tr.appendChild(td);
         }
 
+        create_child_select_menu("Scroll", "scroll", [ "Vertical", "Horizontal" ], update_cqt_layout);
         create_child_checkbox_menu("Transparent", "transparent", (child) => cqt.dataset.opacity = child.checked ? "transparent" : "opaque");
         create_child_checkbox_menu("Visible", "visible", (child) => {
             cqt.style.display = child.checked ? "block" : "none";
+            if (!child.checked)
+                coord_line_h.style.display = coord_line_v.style.display = "none";
             update_af_links();
         });
 
-        function create_child_select_presets() {
-            var tr = get_menu_table_tr();
-            set_common_tr_style(tr);
-            var td = document.createElement("td");
-            set_common_left_td_style(td);
-            td.textContent = "Presets";
-            tr.appendChild(td);
-            td = document.createElement("td");
-            td.colSpan = 3;
-            var child = document.createElement("select");
-            child.style.cursor = "pointer";
-            child.style.width = "100%";
+        function cqt_coord_line_leave(ev) {
+            coord_line_h.style.display = coord_line_v.style.display = "none";
+        }
 
-            const presets = {
-                none: { text: "-- Choose Preset --" },
-                color_default: { text: "Color: Default", command: set_color_default },
-                color_deep_blue: { text: "Color: Deep Blue", command: set_color_deep_blue },
-                color_mono_fire: { text: "Color: Mono Fire", command: set_color_mono_fire },
-                color_juicy_lemon: { text: "Color: Juicy Lemon", command: set_color_juicy_lemon },
-                color_rain_forest: { text: "Color: Rain Forest", command: set_color_rain_forest },
-                scale_960: { text: "Scale: 960", command: () => set_scale_preset(960) },
-                scale_1280: { text: "Scale: 1280", command: () => set_scale_preset(1280) }
-            };
+        function cqt_coord_line_move(ev) {
+            coord_line_h.style.display = coord_line_v.style.display = "block";
+            coord_line_h.style.top = ev.clientY + "px";
+            coord_line_v.style.left = ev.clientX + "px";
+        }
 
-            for (const name of Object.keys(presets)) {
-                var opt = document.createElement("option");
-                opt.textContent = presets[name].text;
-                opt.value = name;
-                child.appendChild(opt);
+        create_child_color_menu("Coord Color", "coord_color", child => {
+            if (child.value == "#000000") {
+                coord_line_h.style.display = coord_line_v.style.display = "none";
+                cqt.removeEventListener("mouseleave", cqt_coord_line_leave);
+                cqt.removeEventListener("mousemove", cqt_coord_line_move);
+            } else {
+                cqt.addEventListener("mouseleave", cqt_coord_line_leave);
+                cqt.addEventListener("mousemove", cqt_coord_line_move);
+                coord_line_h.style.backgroundColor = coord_line_v.style.backgroundColor = child.value;
             }
+        });
 
-            child.onchange = function() {
-                presets[child.value]?.command?.();
-                child.value = "none";
-            };
+        function create_child_select_presets() {
+            const presets = [
+                { title: "-- Choose Preset --" },
+                { title: "Color: Default", callback: set_color_default },
+                { title: "Color: Deep Blue", callback: set_color_deep_blue },
+                { title: "Color: Flame on Violet", callback: set_color_flame_on_violet },
+                { title: "Color: Mono Fire", callback: set_color_mono_fire },
+                { title: "Color: Evergreen", callback: set_color_evergreen },
+                { title: "Color: Juicy Lemon", callback: set_color_juicy_lemon },
+                { title: "Color: Rain Forest", callback: set_color_rain_forest },
+                { title: "Scale: 960", callback: () => set_scale_preset(960) },
+                { title: "Scale: 1280", callback: () => set_scale_preset(1280) }
+            ];
 
-            td.appendChild(child);
-            tr.appendChild(td);
+            create_child_select_menu("Presets", null, presets.map(v => v.title), child => {
+                presets[child.value|0]?.callback?.();
+                child.value = 0;
+            });
 
             function set_color_preset(...args) {
                 child_menu.left_color.value = number2color(args[0]), child_menu.left_color.onchange();
@@ -690,6 +802,15 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
                 child_menu.right_color.value = number2color(args[2]), child_menu.right_color.onchange();
                 child_menu.peak_color.value = number2color(args[3]), child_menu.peak_color.onchange();
                 child_menu.brightness.value = args[4], child_menu.brightness.onchange();
+                child_menu.saturation.value = 0, child_menu.saturation.onchange();
+            }
+
+            function set_color_hue_preset(sat, hue, range, br, peak) {
+                child_menu.saturation.value = sat, child_menu.saturation.onchange();
+                child_menu.hue.value = hue, child_menu.hue.onchange();
+                child_menu.hue_range.value = range, child_menu.hue_range.onchange();
+                child_menu.brightness.value = br, child_menu.brightness.onchange();
+                child_menu.peak_color.value = number2color(peak), child_menu.peak_color.onchange();
             }
 
             function set_color_default() {
@@ -701,8 +822,16 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
                 set_color_preset(0x6400b9, 0x6464dc, 0x0064b9, 0x0000ff, 50);
             }
 
+            function set_color_flame_on_violet() {
+                set_color_hue_preset(20, -3, 18, 10, 0x6633cc);
+            }
+
             function set_color_mono_fire() {
                 set_color_preset(0xb94a25, 0xdc582c, 0xb94a25, 0xff0000, 70);
+            }
+
+            function set_color_evergreen() {
+                set_color_hue_preset(20, 15, -18, 10, 0x3366cc);
             }
 
             function set_color_juicy_lemon() {
@@ -819,6 +948,8 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
 
     create_menu();
     document.body.appendChild(cqt);
+    document.body.appendChild(coord_line_h);
+    document.body.appendChild(coord_line_v);
     document.body.appendChild(af_links);
     dispatchEvent(new CustomEvent("youtube-musical-spectrum-is-available"));
 })().catch(e => console.error(e));
