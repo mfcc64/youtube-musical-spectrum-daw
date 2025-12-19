@@ -34,23 +34,24 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         speed:      { def:  2, min:  1, max: 12 },
         mic:        { def:  0, min:  0, max: 30 },
         mic_pan:    { def:  0, min:-10, max: 10 },
+        interval:   { def:  1, min:  1, max:  4 },
         scale_x:    { def:100, min: 30, max:100 },
         scale_y:    { def:100, min: 30, max:100 },
+        bar_scale:  { def:  0, min:  0, max:  4 },
         base_note:  { def: 16, min: 16, max:100 },
         semitones:  { def:120, min: 36, max:120 },
-        peak_color: { def:0xffffff, min:0, max:0xffffff },
+        scroll:     { def:  0, min:  0, max:  1 },
         left_color: { def:0xdcb900, min:0, max:0xffffff },
-        right_color:{ def:0x00b9dc, min:0, max:0xffffff },
         mid_color:  { def:0xdcdcdc, min:0, max:0xffffff },
+        right_color:{ def:0x00b9dc, min:0, max:0xffffff },
         saturation: { def:  0, min:  0, max: 30 },
         hue:        { def:  0, min:-18, max: 19 },
         hue_range:  { def: 18, min:-36, max: 36 },
-        interval:   { def:  1, min:  1, max:  4 },
-        bar_scale:  { def:  0, min:  0, max:  4 },
         line_mode:  { def:  0, min:  0, max:  4 },
         line_width: { def:  1, min:  1, max:  3 },
         line_color: { def:0xffffff, min:0, max:0xffffff },
-        scroll:     { def:  0, min:  0, max:  1 },
+        peak_range: { def:  72, min:  0, max:120 },
+        peak_color: { def:0xffffff, min:0, max:0xffffff },
         coord_color:{ def:0x000000, min:0, max:0xffffff },
         transparent:{ def:  1, min:  0, max:  1 },
         visible:    { def: document.location.hostname != "www.youtube.com" ? 1 : 0,
@@ -99,7 +100,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
     af_links.style.color = "#FFFFFF";
     af_links.style.fontSize = "10pt";
     af_links.style.right = "8px";
-    af_links.style.bottom = "8px";
+    af_links.style.bottom = "calc(var(--ytms-cqt-bottom, 0px) + 8px)";
     af_links.style.opacity = 1;
     {
         const e = (name, ...args) => {
@@ -119,14 +120,14 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             e("div", {id: "message"},
               e("h3", "YouTube Musical Spectrum"),
               e("ul",
-                e("li", "By default, the visualization is visible on YT Music page but hidden on YouTube page."),
+                e("li", "By default, the visualization is visible on YT Music, Spotify, and SoundCloud but hidden on YouTube page."),
                 e("li", "Press ", e("b", "Ctrl+Alt+G"), " as a shortcut to show/hide visualization. This is equivalent to check/uncheck ", e("b", "Visible"), " setting."),
                 e("li", "Click the ", e("img", {alt: "YTMS"}, {src: icon_16}), " icon at the top left corner to open/close settings."),
                 e("li", "Press ", e("b", "Ctrl+Alt+H"), " to open/close settings and show/hide the ", e("img", {alt: "YTMS"}, {src: icon_16}), " icon."),
                 e("li", "If you want to change the axis, click it."),
                 e("li", "If you want to make your change persistent, click ", e("b", "Set as Default Settings"), " button."),
                 e("li", e("b", "New Features:"), " Custom color, custom range," +
-                    " peak color, bar scale, line visualizer, hue rotation, more color presets, horizontal scroll, coordinate line."),
+                    " peak color, bar scale, line visualizer, hue rotation, more color presets, horizontal scroll, coordinate line, peak range."),
                 e("li", e("a", {href: "https://github.com/mfcc64/youtube-musical-spectrum#settings"}, {target: "_blank"}, "Read more..."))
               ),
               e("p",
@@ -138,7 +139,6 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
               e("img", {alt: "YTMS"}, {src: icon_16}, {style: "curson: pointer;"}, {id: "open_message"}),
               " Support me on ",
               e("a", {href: "https://www.youtube.com/@mfcc64"}, {target: "_blank"}, "Youtube"), " ",
-              e("a", {href: "https://www.patreon.com/mfcc64"}, {target: "_blank"}, "Patreon"), " ",
               e("a", {href: "https://github.com/mfcc64"}, {target: "_blank"}, "GitHub"), " ",
               e("a", {href: "https://paypal.me/mfcc64"}, {target: "_blank"}, "PayPal"), " ",
               e("a", {href: "https://saweria.co/mfcc64"}, {target: "_blank"}, "Saweria")
@@ -157,7 +157,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         af_links.style.display = !af_links_timeout || (child_menu.visible?.checked ?? true) ? "block" : "none";
     }
 
-    const message_version = 12;
+    const message_version = 14;
     af_links.shadowRoot.getElementById("message").style.display = get_opt("message_version") == message_version ? "none" : "block";
     af_links.shadowRoot.getElementById("close_message").addEventListener("click", function() {
         set_opt("message_version", message_version);
@@ -167,18 +167,36 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         af_links.shadowRoot.getElementById("message").style.display = "block";
     });
 
+    const media_symbol = Symbol("media_symbol");
+    let svideos = [];
+    if (document.location.hostname == "soundcloud.com") {
+        await new Promise((res, rej) => {
+            const old = AudioContext.prototype.createMediaElementSource;
+            AudioContext.prototype.createMediaElementSource = function(media) {
+                const retval = old.call(this, media);
+                ShowCQTElement.global_audio_context = this;
+                svideos.push(media);
+                media[media_symbol] = retval;
+                res();
+                return retval;
+            };
+        });
+    }
+
     const cqt = new ShowCQTElement();
     set_fixed_style(cqt, 9999999);
     let stop_count = 0;
     const videos = document.getElementsByTagName("video");
-    let svideos = [];
+    const require_refresh = ["open.spotify.com", "soundcloud.com"].indexOf(document.location.hostname) < 0;
     cqt.render_callback = function() {
-        let need_refresh = (videos.length != svideos.length);
-        for (let k = 0; k < videos.length && !need_refresh; k++)
-            need_refresh = (videos[k] != svideos[k]);
-        if (need_refresh) {
-            this.dataset.inputs = "video";
-            svideos = Array.from(videos);
+        if (require_refresh) {
+            let need_refresh = (videos.length != svideos.length);
+            for (let k = 0; k < videos.length && !need_refresh; k++)
+                need_refresh = (videos[k] != svideos[k]);
+            if (need_refresh) {
+                this.dataset.inputs = "video";
+                svideos = Array.from(videos);
+            }
         }
 
         let state = 0;
@@ -197,7 +215,6 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             #player { margin-top: 0 !important; }`;
         document.head.appendChild(style);
         af_links.style.zIndex = 11;
-        af_links.style.bottom = "calc(var(--ytmusic-player-bar-height, 0) + 8px)";
         cqt.style.zIndex = 10;
 
         function update_cqt_bottom() {
@@ -214,8 +231,39 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         update_cqt_bottom();
     }
 
-    if (document.location.hostname == "music.youtube.com")
-        ytmusic_layout();
+    function spotify_layout() {
+        cqt.style.zIndex = 4;
+        af_links.style.zIndex = 5;
+        document.body.style.setProperty("--ytms-cqt-bottom", "88px"); // FIXME
+        const old_play = HTMLMediaElement.prototype.play;
+        HTMLMediaElement.prototype.play = async function() {
+            const ret = old_play.call(this);
+            if (this.isConnected || this instanceof HTMLAudioElement)
+                return ret;
+            for (const video of svideos)
+                if (this == video)
+                    return ret;
+
+            svideos.push(this);
+            const source = cqt.audio_context.createMediaElementSource(this);
+            source.connect(cqt.audio_input);
+            source.connect(cqt.audio_context.destination);
+            return ret;
+        };
+    }
+
+    function soundcloud_layout() {
+        cqt.style.zIndex = 1000;
+        af_links.style.zIndex = 1001;
+        svideos[0][media_symbol].connect(cqt.audio_input);
+        document.body.style.setProperty("--ytms-cqt-bottom", "var(--play-controls-height, 0px)");
+    }
+
+    switch (document.location.hostname) {
+        case "music.youtube.com": ytmusic_layout(); break;
+        case "open.spotify.com": spotify_layout(); break;
+        case "soundcloud.com": soundcloud_layout(); break;
+    }
 
     const coord_line_h = document.createElement("div");
     const coord_line_v = document.createElement("div");
@@ -304,6 +352,7 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
         menu_div.style.visibility = "hidden";
         menu_div.style.cursor = "default";
         menu_table.style.width = "860px";
+        menu_div.style.display = "block";
 
         var current_tr = null;
         var current_tr_count = 0;
@@ -566,19 +615,18 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             child.onchange();
         }
 
-        create_child_color_menu("Peak Color", "peak_color", child => color_int[3] = color2number(child.value));
+        create_child_select_menu("Scroll", "scroll", [ "Vertical", "Horizontal" ], update_cqt_layout);
 
         function detect_peak(color) {
             if (color_int[3] == 0xffffff)
                 return;
 
-            for (let k = 4; k < color.length - 4; k += 4) {
+            const range = child_menu.peak_range.value / 120 * color.length;
+            for (let k = 4; k + 2 < range && k < color.length - 4; k += 4) {
                 if (color[k+3] <= color[k-1] || color[k+3] < color[k+7])
                     continue;
 
-                const alpha = (1 - (k+2) / color.length) ** 2 - 0.16;
-                if (alpha <= 0)
-                    break;
+                const alpha = Math.cos(0.5 * Math.PI * (k+2) / range) ** 2;
 
                 for (let m = 0; m < 3; m++)
                     color[k+m] = Math.min(color[k+m], 1) * (1 - alpha + peak_color[m] * alpha);
@@ -746,14 +794,8 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             tr.appendChild(td);
         }
 
-        create_child_select_menu("Scroll", "scroll", [ "Vertical", "Horizontal" ], update_cqt_layout);
-        create_child_checkbox_menu("Transparent", "transparent", (child) => cqt.dataset.opacity = child.checked ? "transparent" : "opaque");
-        create_child_checkbox_menu("Visible", "visible", (child) => {
-            cqt.style.display = child.checked ? "block" : "none";
-            if (!child.checked)
-                coord_line_h.style.display = coord_line_v.style.display = "none";
-            update_af_links();
-        });
+        create_child_range_menu("Peak Range", "peak_range");
+        create_child_color_menu("Peak Color", "peak_color", child => color_int[3] = color2number(child.value));
 
         function cqt_coord_line_leave(ev) {
             coord_line_h.style.display = coord_line_v.style.display = "none";
@@ -775,6 +817,14 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
                 cqt.addEventListener("mousemove", cqt_coord_line_move);
                 coord_line_h.style.backgroundColor = coord_line_v.style.backgroundColor = child.value;
             }
+        });
+
+        create_child_checkbox_menu("Transparent", "transparent", (child) => cqt.dataset.opacity = child.checked ? "transparent" : "opaque");
+        create_child_checkbox_menu("Visible", "visible", (child) => {
+            cqt.style.display = child.checked ? "block" : "none";
+            if (!child.checked)
+                coord_line_h.style.display = coord_line_v.style.display = "none";
+            update_af_links();
         });
 
         function create_child_select_presets() {
@@ -907,7 +957,8 @@ import {ShowCQTElement} from "../../showcqt-element@2/showcqt-element.mjs";
             setTimeout(function(){ child.value = "Reset Default Settings"; }, 300);
         });
 
-        menu_div.appendChild(menu_table);
+        menu_div.attachShadow({mode: "open"});
+        menu_div.shadowRoot.appendChild(menu_table);
         menu.onclick = function() {
             menu_is_hidden = !menu_is_hidden;
             if (menu_is_hidden)

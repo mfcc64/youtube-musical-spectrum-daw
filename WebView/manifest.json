@@ -2,8 +2,8 @@
     "manifest_version" : 3,
     "name" : "YouTube Musical Spectrum",
     "short_name" : "YTMS",
-    "description" : "Audio visualizer for YouTube and YT Music with musical notes.",
-    "version" : "16.0.0",
+    "description" : "Audio visualizer for YouTube, YT Music, Spotify, and SoundCloud with musical notes.",
+    "version" : "18.0.0",
     "icons" : {
         "128" : "modules/@mfcc64/ytms-assets@1.0.0/icon-128.png",
         "64"  : "modules/@mfcc64/ytms-assets@1.0.0/icon-64.png",
@@ -13,6 +13,14 @@
         "16"  : "modules/@mfcc64/ytms-assets@1.0.0/icon-16.png"
     },
     "action" : {},
+    "background" : {
+        "service_worker" : "background.js",
+        "scripts" : [ "background.js" ]
+    },
+    "options_ui" : {
+        "page" : "options/options.html",
+        "open_in_tab" : false
+    },
     "browser_specific_settings": {
         "gecko": {
             "id": "{1e41b6c3-1ae3-41eb-89fc-f5c5eb5c1301}"
@@ -21,7 +29,7 @@
     },
     "web_accessible_resources": [
         {
-            "matches"   : [ "https://www.youtube.com/*", "https://music.youtube.com/*" ],
+            "matches"   : [ "https://www.youtube.com/*", "https://music.youtube.com/*", "https://open.spotify.com/*", "https://soundcloud.com/*" ],
             "resources" : [ "*.png", "/modules/*.mjs", "/modules/*.wasm" ]
         }
     ],
@@ -29,7 +37,7 @@
         {
             "run_at"    : "document_end",
             "js"        : [ "wrapper.js" ],
-            "matches"   : [ "https://www.youtube.com/*", "https://music.youtube.com/*" ]
+            "matches"   : [ "https://www.youtube.com/*", "https://music.youtube.com/*", "https://open.spotify.com/*", "https://soundcloud.com/*" ]
         }
     ],
     "content_security_policy" : {
